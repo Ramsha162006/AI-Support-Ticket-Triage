@@ -1,0 +1,6 @@
+{
+  "name": "AI Smart Support & Ticket Triage System",
+  "description": "Full-stack customer support triage dashboard with Gemini AI categorization, urgency detection, draft response generation, MySQL persistence, and Redis caching.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

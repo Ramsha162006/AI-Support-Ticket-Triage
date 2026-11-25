@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Smart Support &amp; Ticket Triage System</title>
+    <meta
+      name="description"
+      content="Full-stack customer support triage dashboard with Gemini AI categorization, urgency detection, and draft response generation."
+    />
+    <meta property="og:title" content="AI Smart Support &amp; Ticket Triage System" />
+    <meta
+      property="og:description"
+      content="Full-stack customer support triage dashboard with Gemini AI categorization, urgency detection, and draft response generation."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a href="#top" class="brand-wordmark">
+          AI Smart Support &amp; Ticket Triage System
+        </a>
+
+        <nav class="topbar-nav" aria-label="Primary navigation">
+          <a href="#submit-section" class="nav-link">Submit Ticket</a>
+          <a href="#analytics-section" class="nav-link">Analytics</a>
+          <a href="#queue-section" class="nav-link">Triage Queue</a>
+        </nav>
+
+        <div class="topbar-actions">
+          <button
+            type="button"
+            id="themeToggleBtn"
+            class="btn btn-secondary btn-compact"
+            aria-label="Toggle color theme"
+          >
+            <svg
+              id="themeIcon"
+              class="icon-svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="m4.93 4.93 1.41 1.41"></path>
+              <path d="m17.66 17.66 1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="m6.34 17.66-1.41 1.41"></path>
+              <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+            <span id="themeToggleLabel">Light Mode</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="top" class="workspace-container">
+      <div class="workspace-grid">
+        <!-- Left Area: Submit Customer Ticket Form -->
+        <aside id="submit-section" class="intake-column">
+          <section class="panel intake-panel" aria-labelledby="formHeading">
+            <div class="panel-header">
+              <h1 id="formHeading" class="panel-title">Submit Customer Ticket</h1>
+              <p class="panel-subtitle">
+                Enter customer details and issue description to automatically assign
+                category, urgency, and a ready-to-send draft reply.
+              </p>
+            </div>
+
+            <div class="preset-bar" aria-label="Sample issue templates">
+              <span class="preset-label">Try sample:</span>
+              <button type="button" class="preset-btn" data-preset="billing">
+                Double Charge
+              </button>
+              <button type="button" class="preset-btn" data-preset="technical">
+                API Outage
+              </button>
+              <button type="button" class="preset-btn" data-preset="refund">
+                Refund Request
+              </button>
+              <button type="button" class="preset-btn" data-preset="account">
+                Account Lockout
+              </button>
+            </div>
+
+            <form id="ticketForm" class="ticket-form" novalidate>
+              <div class="field-group">
+                <label for="customerName" class="field-label">Customer Name</label>
+                <input
+                  type="text"
+                  id="customerName"
+                  name="customerName"
+                  class="field-input"
+                  placeholder="Jordan Taylor"
+                  maxlength="120"
+                  required
+                  autocomplete="name"
+                />
+              </div>
+
+              <div class="field-group">
+                <label for="customerEmail" class="field-label">Customer Email</label>
+                <input
+                  type="email"
+                  id="customerEmail"
+                  name="customerEmail"
+                  class="field-input"
+                  placeholder="jordan@company.com"
+                  maxlength="180"
+                  required
+                  autocomplete="email"
+                />
+              </div>
+
+              <div class="field-group">
+                <div class="field-label-row">
+                  <label for="issueDescription" class="field-label">
+                    Issue Description
+                  </label>
+                  <span id="charCounter" class="char-counter tabular-nums">
+                    0 / 4000
+                  </span>
+                </div>
+                <textarea
+                  id="issueDescription"
+                  name="issueDescription"
+                  class="field-textarea"
+                  rows="6"
+                  maxlength="4000"
+                  placeholder="Describe the billing discrepancy, technical error, refund inquiry, or account access issue..."
+                  required
+                ></textarea>
+              </div>
+
+              <div
+                id="formAlert"
+                class="alert-banner hidden"
+                role="status"
+                aria-live="polite"
+              ></div>
+
+              <button type="submit" id="submitBtn" class="btn btn-primary btn-full">
+                <span id="submitSpinner" class="spinner hidden" aria-hidden="true"></span>
+                <span id="submitBtnText">Submit &amp; Auto-Triage</span>
+              </button>
+            </form>
+          </section>
+        </aside>
+
+        <!-- Right Area: Live Triage Queue & Analytics Dashboard -->
+        <section
+          id="analytics-section"
+          class="dashboard-column"
+          aria-labelledby="dashboardHeading"
+        >
+          <div class="dashboard-header-row">
+            <div>
+              <h2 id="dashboardHeading" class="dashboard-title">
+                Live Triage Queue &amp; Analytics
+              </h2>
+              <p class="dashboard-subtitle">
+                Monitor incoming support volume, prioritize high-urgency incidents, and
+                dispatch AI-drafted replies.
+              </p>
+            </div>
+            <button
+              type="button"
+              id="refreshBtn"
+              class="btn btn-secondary btn-compact"
+            >
+              <svg
+                class="icon-svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path>
+                <path d="M21 3v5h-5"></path>
+              </svg>
+              <span>Refresh Queue</span>
+            </button>
+          </div>
+
+          <!-- Top KPI Summary Cards -->
+          <div class="kpi-grid" role="region" aria-label="Ticket summary metrics">
+            <article class="kpi-card">
+              <span class="kpi-label">Total Tickets</span>
+              <strong id="kpiTotal" class="kpi-value tabular-nums">0</strong>
+              <span class="kpi-meta" id="kpiOpenSubtext">0 open in queue</span>
+            </article>
+
+            <article class="kpi-card">
+              <span class="kpi-label">High Urgency Count</span>
+              <strong id="kpiHighUrgency" class="kpi-value kpi-value-danger tabular-nums">
+                0
+              </strong>
+              <span class="kpi-meta" id="kpiHighOpenSubtext">0 active high priority</span>
+            </article>
+
+            <article class="kpi-card">
+              <span class="kpi-label">Resolved Count</span>
+              <strong id="kpiResolved" class="kpi-value kpi-value-success tabular-nums">
+                0
+              </strong>
+              <span class="kpi-meta" id="kpiResolutionRate">0% resolution rate</span>
+            </article>
+          </div>
+
+          <!-- Filters & Search Controls -->
+          <div id="queue-section" class="filter-toolbar panel">
+            <div class="filter-row">
+              <div class="filter-group">
+                <span class="filter-group-label">Status</span>
+                <div class="segmented-control" id="statusFilters" role="group" aria-label="Filter by status">
+                  <button type="button" class="filter-btn active" data-status="All">
+                    All
+                  </button>
+                  <button type="button" class="filter-btn" data-status="Open">
+                    Open
+                  </button>
+                  <button type="button" class="filter-btn" data-status="Resolved">
+                    Resolved
+                  </button>
+                </div>
+              </div>
+
+              <div class="search-wrapper">
+                <label for="searchInput" class="sr-only">Search tickets</label>
+                <svg
+                  class="search-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </svg>
+                <input
+                  type="search"
+                  id="searchInput"
+                  class="search-input"
+                  placeholder="Search customer, email, or issue..."
+                />
+              </div>
+            </div>
+
+            <div class="filter-row category-filter-row">
+              <span class="filter-group-label">Category</span>
+              <div class="category-buttons" id="categoryFilters" role="group" aria-label="Filter by category">
+                <button type="button" class="filter-btn active" data-category="All">
+                  All
+                </button>
+                <button type="button" class="filter-btn" data-category="Billing">
+                  Billing
+                </button>
+                <button type="button" class="filter-btn" data-category="Technical">
+                  Technical
+                </button>
+                <button type="button" class="filter-btn" data-category="Refund">
+                  Refund
+                </button>
+                <button type="button" class="filter-btn" data-category="Account">
+                  Account
+                </button>
+                <button type="button" class="filter-btn" data-category="General">
+                  General
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Queue Error Banner -->
+          <div id="queueError" class="alert-banner alert-error hidden" role="alert">
+            <span id="queueErrorText">Unable to load tickets.</span>
+            <button type="button" id="retryLoadBtn" class="btn btn-secondary btn-compact">
+              Retry
+            </button>
+          </div>
+
+          <!-- Ticket List Container -->
+          <div id="ticketList" class="ticket-list" aria-live="polite">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
