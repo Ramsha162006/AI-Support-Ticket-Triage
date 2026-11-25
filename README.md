@@ -1,20 +1,43 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+#### AI Smart Support & Ticket Triage System
 
-# Run and deploy your AI Studio app
+Node.js, Express.js, Google Gemini AI, MySQL (Aiven Cloud), aur Redis (Upstash Cloud) par based ek automated customer support ticket triage system. 
 
-This contains everything you need to run your app locally.
+#### 🌐 Live Demo
 
-View your app in AI Studio: https://ai.studio/apps/f9ee8ee1-de43-4611-b66d-d19684504838
+* **[AI Support Ticket Triage Live](https://ai-support-ticket-triage.onrender.com)**
 
-## Run Locally
+#### ✨ Key Features
 
-**Prerequisites:**  Node.js
+* **AI Auto-Triage & Draft Replies:** Gemini AI se tickets ka categorization, urgency assignment, aur automated draft replies.
+* **Live Triage Queue & Analytics:** KPI summary cards, status/category filters, aur dark mode support.
+* **Cloud Database & Caching:** Aiven Cloud MySQL aur Upstash Cloud Redis caching ka integration.
 
+#### 🛠️ Tech Stack
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+* **Frontend:** HTML5, CSS3, Vanilla JavaScript
+* **Backend & AI:** Node.js, Express.js, Google Gemini SDK
+* **Database & DevOps:** MySQL, Redis, Docker, Render
+
+#### 🐳 Quick Start (Docker)
+
+1. **Clone & Configure:** 
+
+bash
+
+git clone https://github.com/Ramsha162006/AI-Support-Ticket-Triage.git
+cd AI-Support-Ticket-Triage
+
+Use code with caution.
+
+Copy code text to clipboard.
+2. **Run:** 
+
+bash
+
+docker compose up --build
+
+Use code with caution.
+
+Copy code text to clipboard.
+
+**Author:** Ramsha
