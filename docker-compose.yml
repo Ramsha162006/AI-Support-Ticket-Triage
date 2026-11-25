@@ -6,7 +6,8 @@ services:
     environment:
       PORT: 3000
     environment:
-    - GCP_API_KEY=${GCP_API_KEY}      MYSQL_HOST: mysql
+    - GEMINI_API_KEY= ${GEMINI_API_KEY}
+      MYSQL_HOST: mysql
       MYSQL_PORT: 3306
       MYSQL_USER: ${MYSQL_USER:-triage_user}
       MYSQL_PASSWORD: tanzeel
